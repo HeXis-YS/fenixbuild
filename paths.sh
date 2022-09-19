@@ -27,4 +27,5 @@ readonly mozilla_release=$(realpath ../srclib/MozFennec)
 readonly rustup=$(realpath ../srclib/rustup)
 readonly pyenv=$(realpath ../srclib/pyenv)
 readonly wasi=$(realpath ../srclib/wasi-sdk)
+readonly gmscore=$(realpath ../srclib/gmscore)
 readonly java8=/usr/lib/jvm/java-8-openjdk-amd64

@@ -211,12 +211,12 @@ popd
 
 pushd "$mozilla_release"
 
-# Remove proprietary libraries
+# Replace GMS with microG client library
 sed -i \
-    -e '/com.google.android.gms/d' \
+    -s 's/"com.google.android.gms:play-services-fido:.*"/"org.microg.gms:play-services-fido:0.2.24.223315-40 (b582f19)"/' \
     mobile/android/geckoview/build.gradle
 
-# Patch the use of proprietary libraries
+# Make GeckoView always use the privileged FIDO2 API
 patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones

@@ -62,6 +62,17 @@ make \
     -j"$(nproc)"
 popd
 
+# Build microG libraries
+pushd "$gmscore"
+gradle -x javaDocReleaseGeneration \
+    :play-services-base-api:publishToMavenLocal \
+    :play-services-base:publishToMavenLocal \
+    :play-services-basement:publishToMavenLocal \
+    :play-services-fido-api:publishToMavenLocal \
+    :play-services-fido:publishToMavenLocal \
+    :play-services-tasks:publishToMavenLocal
+popd
+
 pushd "$mozilla_release"
 export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=none
 ./mach build
