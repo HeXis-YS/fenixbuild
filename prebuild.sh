@@ -140,6 +140,12 @@ case $(echo "$2" | cut -c 6) in
         rusttarget=arm64
         triplet="$target$minsdk"
         ;;
+    3)
+        abi=x86_64
+        target=x86_64-linux-android
+        rusttarget=x86_64
+        triplet="$target$minsdk"
+        ;;
     *)
         echo "Unknown target code in $2." >&2
         exit 1
