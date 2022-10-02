@@ -213,7 +213,7 @@ pushd "$mozilla_release"
 
 # Replace GMS with microG client library
 sed -i \
-    -s 's/"com.google.android.gms:play-services-fido:.*"/"org.microg.gms:play-services-fido:0.2.24.223315-40 (b582f19)"/' \
+    -s 's/"com.google.android.gms:play-services-fido:.*"/"org.microg.gms:play-services-fido-core:0.2.24.223315-40 (b582f19)"/' \
     mobile/android/geckoview/build.gradle
 
 # Make GeckoView always use the privileged FIDO2 API
