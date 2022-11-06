@@ -782,8 +782,11 @@
     "zh-CN": {
       "default": {
         "visibleDefaultEngines": [
-          "bing", "brave", "ddg", "ddghtml", "ddglite", "ecosia", "google", "metager", "mojeek", "qwant", "qwantlite", "startpage", "wikipedia-zh-CN"
+          "baidu", "bing", "brave", "ddg", "ddghtml", "ddglite", "ecosia", "google", "metager", "mojeek", "qwant", "qwantlite", "startpage", "wikipedia-zh-CN"
         ]
+      },
+      "CN": {
+        "searchDefault": "百度"
       }
     },
     "zh-TW": {
