@@ -28,7 +28,8 @@ source "$(dirname "$0")/paths.sh"
 
 # Set up Android SDK
 sdkmanager 'build-tools;31.0.0'
-sdkmanager 'ndk;25.0.8775105' # for Glean
+sdkmanager 'ndk;25.0.8775105' # for GleanAS
+sdkmanager 'ndk;25.1.8937393' # for Glean
 
 # Set up Rust
 "$rustup"/rustup-init.sh -y
@@ -54,8 +55,7 @@ make \
 popd
 
 pushd "$mozilla_release"
-export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=none
-./mach build
+./mach --verbose build
 gradle publishWithGeckoBinariesReleasePublicationToMavenLocal
 gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd

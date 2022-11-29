@@ -119,6 +119,17 @@ sed -i \
     -e '/val settings = context.components.settings/d' \
     app/src/main/java/org/mozilla/fenix/home/HomeMenu.kt
 
+# Expose "Pull to refresh" setting and enable tab reordering
+sed -i \
+    -e '/pullToRefreshEnabled = /s/Config.channel.isNightlyOrDebug/true/' \
+    -e '/tabReorderingFeature = /s/Config.channel.isNightlyOrDebug/true/' \
+    app/src/main/java/org/mozilla/fenix/FeatureFlags.kt
+
+# Disable "Pull to refresh" by default
+sed -i \
+    -e '/pref_key_website_pull_to_refresh/{n; s/default = true/default = false/}' \
+    app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+
 # Set up target parameters
 minsdk=21
 case $(echo "$2" | cut -c 6) in
@@ -170,6 +181,8 @@ pushd "$android_components_as"
 acver=$(git name-rev --tags --name-only "$(git rev-parse HEAD)")
 acver=${acver#v}
 sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
+# Temporary workaround
+sed -i 's/50.1.3/51.2.0/' buildSrc/src/main/java/Dependencies.kt
 # We don't need Gecko while building A-C for A-S
 rm -fR components/browser/engine-gecko*
 localize_maven
@@ -226,13 +239,6 @@ sed -i \
     -e '/repositories {/a\        maven { url "https://plugins.gradle.org/m2/" }' \
     -e '/repositories {/a\        google()' \
     build.gradle
-
-# Replace the uses of std::is_xxx_v<T> traits with std::is_xxx<T>::value
-# because they are not supported by libstdc++ 6.3.0 (we're still on Debian 9)
-sed -i -E \
-    -e 's/std::is_([_a-z]*)_v<([_A-Za-z][_A-Za-z0-9]*)>/std::is_\1<\2>::value/' \
-    -e 's/std::is_([_a-z]*)_v<([_A-Za-z][_A-Za-z0-9]*), ([_A-Za-z][_A-Za-z0-9]*)>/std::is_\1<\2, \3>::value/' \
-    mfbt/*.h
 
 # Configure
 sed -i -e '/check_android_tools("emulator"/d' build/moz.configure/android-sdk.configure
