@@ -585,27 +585,6 @@ index 787651bd1..706bee64c 100644
              reviewSettings = FenixReviewSettings(settings),
          )
      }
-diff --git a/app/src/main/java/org/mozilla/fenix/components/Core.kt b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index 5dfc2c576..79a10321c 100644
---- a/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -451,8 +451,14 @@ class Core(
-                 } else {
-                     defaultTopSites.add(
-                         Pair(
--                            context.getString(R.string.default_top_site_google),
--                            SupportUtils.GOOGLE_URL,
-+                            context.getString(R.string.default_top_site_fdroid),
-+                            SupportUtils.FDROID_URL,
-+                        ),
-+                    )
-+                    defaultTopSites.add(
-+                        Pair(
-+                            context.getString(R.string.default_top_site_eff),
-+                            SupportUtils.EFF_URL,
-                         ),
-                     )
- 
 diff --git a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 index 87c3a831b..55b0074ee 100644
 --- a/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
