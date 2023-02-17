@@ -79,7 +79,7 @@ sed -i \
     app/build.gradle
 
 # Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+patch -N -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
 # Let it be Fenix
 sed -i -e 's/Firefox Daylight/Fenix/; s/Firefox/Fenix/g' \
