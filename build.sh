@@ -65,7 +65,7 @@ gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$glean_as"
-export TARGET_CFLAGS=-DNDEBUG
+export TARGET_CFLAGS="-DNDEBUG ${CFLAGS}"
 gradle publishToMavenLocal
 popd
 
