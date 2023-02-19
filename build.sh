@@ -40,8 +40,8 @@ rm -rf ~/.cache/sdkmanager/*.zip /tmp/.sdkmanager* # Delete sdkmanager temporary
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
 rustup default stable
-rustup target add thumbv7neon-linux-androideabi
-rustup target add armv7-linux-androideabi
+# rustup target add thumbv7neon-linux-androideabi
+# rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
 cargo install --force --vers 0.24.3 cbindgen
 
