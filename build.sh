@@ -39,7 +39,7 @@ rm -rf ~/.cache/sdkmanager/*.zip /tmp/.sdkmanager* # Delete sdkmanager temporary
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
 source "$HOME/.cargo/env"
-rustup default 1.66.1
+rustup default stable
 rustup target add thumbv7neon-linux-androideabi
 rustup target add armv7-linux-androideabi
 rustup target add aarch64-linux-android
