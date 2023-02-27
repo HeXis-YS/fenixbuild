@@ -249,12 +249,13 @@ ac_add_options --disable-tests
 ac_add_options --disable-updater
 ac_add_options --enable-application=mobile/android
 # ac_add_options --enable-hardening
-ac_add_options --enable-optimize=-O3
-ac_add_options --enable-release
 ac_add_options --enable-minify=properties # JS minification breaks addons
-ac_add_options --enable-update-channel=release
+ac_add_options --enable-optimize="${CFLAGS} ${CFLAGS_TUNE}"
+ac_add_options --enable-release
 ac_add_options --enable-rust-simd
+ac_add_options --enable-small-chunk-size
 ac_add_options --enable-strip
+ac_add_options --enable-update-channel=release
 ac_add_options --target=$target
 ac_add_options --with-android-min-sdk=$minsdk
 ac_add_options --with-android-ndk="$ANDROID_NDK"
@@ -266,9 +267,17 @@ ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$tripl
 ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
+ac_add_options MOZ_TELEMETRY_REPORTING=
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 mk_add_options MOZ_PARALLEL_BUILD=$(nproc)
+export MOZILLA_OFFICIAL=1
 export RUSTC_OPT_LEVEL=3
+if [ "${TARGET_ARCH_VARIANT}" = "generic" ]; then
+    TARGET_ARCH_VARIANT=""
+fi
+if [ "${TARGET_CPU_VARIANT}" = "generic" ]; then
+    TARGET_CPU_VARIANT=""
+fi
 EOF
 
 # Disable Gecko Media Plugins and casting
