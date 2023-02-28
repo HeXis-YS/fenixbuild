@@ -270,7 +270,6 @@ ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 ac_add_options MOZ_TELEMETRY_REPORTING=
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 mk_add_options MOZ_PARALLEL_BUILD=$(nproc)
-export MOZILLA_OFFICIAL=1
 export RUSTC_OPT_LEVEL=3
 if [ "${TARGET_ARCH_VARIANT}" = "generic" ]; then
     TARGET_ARCH_VARIANT=""
