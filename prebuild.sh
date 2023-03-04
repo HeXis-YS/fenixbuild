@@ -39,6 +39,14 @@ function localize_maven {
     done
 }
 
+# Remove unnecessary projects
+rm -fR focus-android
+
+# Hack to prevent too long string from breaking build
+sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
+sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
+
+pushd "$fenix"
 # Set up the app ID, version name and version code
 sed -i \
     -e 's|\.firefox|.fenix|' \
@@ -77,10 +85,12 @@ sed -i \
     -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
     -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
     app/build.gradle
+popd
 
 # Patch the use of proprietary and tracking libraries
 patch -N -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
+pushd "$fenix"
 # Let it be Fenix
 sed -i -e 's/Firefox Daylight/Fenix/; s/Firefox/Fenix/g' \
     app/src/*/res/values*/*strings.xml
@@ -156,6 +166,7 @@ case $(echo "$2" | cut -c 6) in
     ;;
 esac
 sed -i -e "s/include \".*\"/include \"$abi\"/" app/build.gradle
+popd
 
 #
 # Glean
@@ -227,7 +238,7 @@ sed -i \
     mobile/android/geckoview/build.gradle
 
 # Patch the use of proprietary libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
+patch -N -p1 --no-backup-if-mismatch --quiet < "$patches/gecko-liberate.patch"
 
 # Remove Mozilla repositories substitution and explicitly add the required ones
 sed -i \
@@ -270,7 +281,6 @@ ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 ac_add_options MOZ_TELEMETRY_REPORTING=
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj
 mk_add_options MOZ_PARALLEL_BUILD=$(nproc)
-export MOZILLA_OFFICIAL=1
 export RUSTC_OPT_LEVEL=3
 if [ "${TARGET_ARCH_VARIANT}" = "generic" ]; then
     TARGET_ARCH_VARIANT=""

@@ -65,7 +65,7 @@ gradle exoplayer2:publishReleasePublicationToMavenLocal
 popd
 
 pushd "$glean_as"
-export TARGET_CFLAGS="-DNDEBUG ${CFLAGS}"
+export TARGET_CFLAGS="-DNDEBUG ${CFLAGS} ${CFLAGS_TUNE}"
 gradle publishToMavenLocal
 popd
 
@@ -91,4 +91,6 @@ pushd "$android_components"
 gradle publishToMavenLocal
 popd
 
+pushd "$fenix"
 gradle assembleRelease
+popd
