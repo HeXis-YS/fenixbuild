@@ -46,6 +46,13 @@ rm -fR focus-android
 sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
 sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
 
+# Patch the use of proprietary and tracking libraries
+patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+
+#
+# Fenix
+#
+
 pushd "$fenix"
 # Set up the app ID, version name and version code
 sed -i \
@@ -56,13 +63,6 @@ sed -i \
 sed -i \
     -e '/android:targetPackage/s/firefox/fenix/' \
     app/src/release/res/xml/shortcuts.xml
-
-# Remove proprietary and tracking libraries
-sed -i \
-    -e '/Deps.mozilla_lib_push_firebase/d' \
-    -e '/Deps.adjust/d; /Deps.installreferrer/d; /Deps.google_ads_id/d' \
-    -e '/Deps.google_play_store/d' \
-    app/build.gradle
 
 # Disable crash reporting
 sed -i -e '/CRASH_REPORTING/s/true/false/' app/build.gradle
@@ -85,7 +85,6 @@ sed -i \
     -e '/Deps.mozilla_browser_engine_gecko_nightly/d' \
     -e '/Deps.mozilla_browser_engine_gecko_beta/d' \
     app/build.gradle
-popd
 
 # Patch the use of proprietary and tracking libraries
 patch -N -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
@@ -138,6 +137,11 @@ sed -i \
 sed -i \
     -e '/pref_key_website_pull_to_refresh/{n; s/default = true/default = false/}' \
     app/src/main/java/org/mozilla/fenix/utils/Settings.kt
+
+# Fixup dependency on GMS
+sed -i \
+    -e 's/com.google.android.gms.common.util.VisibleForTesting/androidx.annotation.VisibleForTesting/' \
+    app/src/main/java/org/mozilla/fenix/widget/VoiceSearchActivity.kt
 
 # Set up target parameters
 minsdk=21
@@ -193,7 +197,15 @@ acver=${acver#v}
 sed -e "s/VERSION/$acver/" "$patches/a-c-buildconfig.yml" > .buildconfig.yml
 # We don't need Gecko while building A-C for A-S
 rm -fR components/browser/engine-gecko*
+# Remove unnecessary projects
+rm -fR ../focus-android
 localize_maven
+# Keep in sync with AS glean to prevent compiling glean three times
+sed -i -e 's/51.8.2/52.2.0/' plugins/dependencies/src/main/java/DependenciesPlugin.kt
+# Workaround build failure like in f6fd8d9069e839cdf16ccf661ecf84b8ec854991
+sed -i -e '/EventExtraKey/d' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
+sed -i -e '/NoExtraKeys/d' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
+sed -i -e 's/, E//g' components/service/glean/src/main/java/mozilla/components/service/glean/private/MetricAliases.kt
 popd
 
 pushd "$android_components"
@@ -224,6 +236,8 @@ sed -i -e '/ndkVersion/a\    ndkPath rootProject.ext.build.ndkPath' \
     megazords/full/android/build.gradle
 sed -i -e '/NDK ez-install/,/^$/d' libs/verify-android-ci-environment.sh
 localize_maven
+# Fix stray
+sed -i -e '/^    mavenLocal/{n;d}' tools/nimbus-gradle-plugin/build.gradle
 popd
 
 #
@@ -276,6 +290,7 @@ ac_add_options --with-gradle=$(command -v gradle)
 ac_add_options --with-wasi-sysroot="$wasi/build/install/wasi/share/wasi-sysroot"
 ac_add_options CC="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang"
 ac_add_options CXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/$triplet-clang++"
+ac_add_options STRIP="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/$target/bin/strip"
 ac_add_options WASM_CC="$wasi/build/install/wasi/bin/clang"
 ac_add_options WASM_CXX="$wasi/build/install/wasi/bin/clang++"
 ac_add_options MOZ_TELEMETRY_REPORTING=
