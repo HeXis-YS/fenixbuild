@@ -48,7 +48,7 @@ sed -i '/val statusCmd/,+3d' fenix/buildSrc/src/main/java/Config.kt
 sed -i '/val revision = /a \        val statusSuffix = "+"' fenix/buildSrc/src/main/java/Config.kt
 
 # Patch the use of proprietary and tracking libraries
-patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
+patch -N -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 
 #
 # Fenix
