@@ -594,27 +594,6 @@ index 35300eb4f0..8040b7cb83 100644
              reviewSettings = FenixReviewSettings(settings),
          )
      }
-diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-index fee96e2cb0..1bffeaeff9 100644
---- a/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-+++ b/fenix/app/src/main/java/org/mozilla/fenix/components/Core.kt
-@@ -486,8 +486,14 @@ class Core(
-                 } else {
-                     defaultTopSites.add(
-                         Pair(
--                            context.getString(R.string.default_top_site_google),
--                            SupportUtils.GOOGLE_URL,
-+                            context.getString(R.string.default_top_site_fdroid),
-+                            SupportUtils.FDROID_URL,
-+                        ),
-+                    )
-+                    defaultTopSites.add(
-+                        Pair(
-+                            context.getString(R.string.default_top_site_eff),
-+                            SupportUtils.EFF_URL,
-                         ),
-                     )
- 
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt b/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
 index 33e8704adc..ffa85e3e46 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/components/ReviewPromptController.kt
@@ -709,36 +688,6 @@ index 48213b60a4..d74b91c6ab 100644
  
      companion object {
          private const val LOGTAG = "AdjustMetricsService"
-diff --git a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-index a015a69eb7..610c24cb08 100644
---- a/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-+++ b/fenix/app/src/main/java/org/mozilla/fenix/home/topsites/TopSiteItemViewHolder.kt
-@@ -177,6 +177,12 @@ class TopSiteItemViewHolder(
-                 SupportUtils.MEITUAN_URL -> {
-                     binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_meituan))
-                 }
-+                SupportUtils.FDROID_URL -> {
-+                    binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_fdroid))
-+                }
-+                SupportUtils.EFF_URL -> {
-+                    binding.faviconImage.setImageDrawable(getDrawable(itemView.context, R.drawable.ic_eff))
-+                }
-                 else -> {
-                     itemView.context.components.core.icons.loadIntoView(binding.faviconImage, topSite.url)
-                 }
-diff --git a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-index b566fe0d43..e768d6098f 100644
---- a/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-+++ b/fenix/app/src/main/java/org/mozilla/fenix/settings/SupportUtils.kt
-@@ -38,6 +38,8 @@ object SupportUtils {
-     const val GOOGLE_US_URL = "https://www.google.com/webhp?client=firefox-b-1-m&channel=ts"
-     const val GOOGLE_XX_URL = "https://www.google.com/webhp?client=firefox-b-m&channel=ts"
-     const val WHATS_NEW_URL = "https://www.mozilla.org/firefox/android/notes"
-+    const val FDROID_URL = "https://f-droid.org/"
-+    const val EFF_URL = "https://www.eff.org/"
- 
-     enum class SumoTopic(internal val topicStr: String) {
-         HELP("faq-android"),
 diff --git a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt b/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
 index 6bc1ce49c5..cb5485d45e 100644
 --- a/fenix/app/src/main/java/org/mozilla/fenix/utils/Settings.kt
@@ -782,20 +731,6 @@ index 6bc1ce49c5..cb5485d45e 100644
      )
  
      /**
-diff --git a/fenix/app/src/main/res/values/static_strings_extra.xml b/fenix/app/src/main/res/values/static_strings_extra.xml
-new file mode 100644
-index 0000000000..101f4e0d0a
---- /dev/null
-+++ b/fenix/app/src/main/res/values/static_strings_extra.xml
-@@ -0,0 +1,8 @@
-+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-+<!-- This Source Code Form is subject to the terms of the Mozilla Public
-+   - License, v. 2.0. If a copy of the MPL was not distributed with this
-+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-+<resources>
-+    <string name="default_top_site_fdroid" translatable="false">F-Droid</string>
-+    <string name="default_top_site_eff" translatable="false">EFF</string>
-+</resources>
 diff --git a/fenix/app/src/main/res/xml/preferences.xml b/fenix/app/src/main/res/xml/preferences.xml
 index d4bb27a49c..449b8cf499 100644
 --- a/fenix/app/src/main/res/xml/preferences.xml
