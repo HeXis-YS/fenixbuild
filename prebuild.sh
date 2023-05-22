@@ -57,12 +57,12 @@ patch -p1 --no-backup-if-mismatch --quiet < "$patches/fenix-liberate.patch"
 pushd "$fenix"
 # Set up the app ID, version name and version code
 sed -i \
-    -e 's|\.firefox|.fennec_fdroid|' \
+    -e 's|\.firefox|.fenix|' \
     -e "s/Config.releaseVersionName(project)/'$1'/" \
     -e "s/Config.generateFennecVersionCode(arch)/$2/" \
     app/build.gradle
 sed -i \
-    -e '/android:targetPackage/s/firefox/fennec_fdroid/' \
+    -e '/android:targetPackage/s/firefox/fenix/' \
     app/src/release/res/xml/shortcuts.xml
 
 # Disable crash reporting
@@ -88,18 +88,18 @@ sed -i \
     app/build.gradle
 
 # Let it be Fennec
-sed -i -e 's/Firefox Daylight/Fennec/; s/Firefox/Fennec/g' \
+sed -i -e 's/Firefox Daylight/Fenix/; s/Firefox/Fenix/g' \
     app/src/*/res/values*/*strings.xml
 
 # Replace proprietary artwork
-rm app/src/release/res/drawable/ic_launcher_foreground.xml
-rm app/src/release/res/mipmap-*/ic_launcher.png
-sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
-find "$patches/fenix-overlay" -type f | while read -r src; do
-    dst=app/src/release/${src#"$patches/fenix-overlay/"}
-    mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-done
+# rm app/src/release/res/drawable/ic_launcher_foreground.xml
+# rm app/src/release/res/mipmap-*/ic_launcher.png
+# sed -i -e '/android:roundIcon/d' app/src/main/AndroidManifest.xml
+# find "$patches/fenix-overlay" -type f | while read -r src; do
+#     dst=app/src/release/${src#"$patches/fenix-overlay/"}
+#     mkdir -p "$(dirname "$dst")"
+#     cp "$src" "$dst"
+# done
 
 # Enable about:config
 sed -i \
