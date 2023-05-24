@@ -34,8 +34,6 @@ source "$(dirname "$0")/paths.sh"
 # sdkmanager 'ndk;25.1.8937393' # for Glean
 # sdkmanager 'ndk;25.2.9519653'
 
-rm -rf ~/.cache/sdkmanager/*.zip /tmp/.sdkmanager* # Delete sdkmanager temporary files
-
 # Set up Rust
 "$rustup"/rustup-init.sh -y
 # shellcheck disable=SC1090,SC1091
