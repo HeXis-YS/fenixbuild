@@ -27,12 +27,12 @@ source "$(dirname "$0")/paths.sh"
 # plugins (Glean).
 
 # Set up Android SDK
-sdkmanager 'build-tools;31.0.0'
-sdkmanager 'build-tools;33.0.0'
-sdkmanager 'build-tools;33.0.1'
-sdkmanager 'ndk;25.0.8775105' # for GleanAS
-sdkmanager 'ndk;25.1.8937393' # for Glean
-sdkmanager 'ndk;25.2.9519653'
+# sdkmanager 'build-tools;31.0.0'
+# sdkmanager 'build-tools;33.0.0'
+# sdkmanager 'build-tools;33.0.1'
+# sdkmanager 'ndk;25.0.8775105' # for GleanAS
+# sdkmanager 'ndk;25.1.8937393' # for Glean
+# sdkmanager 'ndk;25.2.9519653'
 
 rm -rf ~/.cache/sdkmanager/*.zip /tmp/.sdkmanager* # Delete sdkmanager temporary files
 
