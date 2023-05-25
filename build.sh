@@ -52,6 +52,22 @@ touch build/compiler-rt.BUILT # fool the build system
 make \
     BULK_MEMORY_SOURCES= \
     PREFIX=/wasi \
+    build/llvm.BUILT \
+    -j"$(nproc)"
+
+replace_files=(
+    "build/llvm/bin/clang-14" \
+    "build/install/wasi/bin/clang-14")
+
+for file in ${replace_files[@]}; do
+    mv ${file} $(dirname "${file}")/_$(basename "${file}")
+    cp $(dirname ${0})/wasm-wrapper.sh ${file}
+    chmod 755 ${file}
+done
+
+make \
+    BULK_MEMORY_SOURCES= \
+    PREFIX=/wasi \
     build/wasi-libc.BUILT \
     build/libcxx.BUILT \
     -j"$(nproc)"
