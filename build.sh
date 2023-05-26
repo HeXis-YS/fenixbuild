@@ -46,31 +46,33 @@ cargo install --force --vers 0.24.3 cbindgen
 
 # Build WASI SDK
 pushd "$wasi"
-mkdir -p build/install/wasi
-touch build/compiler-rt.BUILT # fool the build system
-# BULK_MEMORY_SOURCES= disables -mbulk-memory which is not supported by wasm2c
-make \
-    BULK_MEMORY_SOURCES= \
-    PREFIX=/wasi \
-    build/llvm.BUILT \
-    -j"$(nproc)"
+if [[ ! -f ".wasi-sdk.BUILT" ]]; then
+    mkdir -p build/install/wasi
+    touch build/compiler-rt.BUILT # fool the build system
+    # BULK_MEMORY_SOURCES= disables -mbulk-memory which is not supported by wasm2c
+    make \
+        BULK_MEMORY_SOURCES= \
+        PREFIX=/wasi \
+        build/llvm.BUILT \
+        -j"$(nproc)"
 
-replace_files=(
-    "build/llvm/bin/clang-14" \
-    "build/install/wasi/bin/clang-14")
+    replace_files=(
+        "build/llvm/bin/clang-14" \
+        "build/install/wasi/bin/clang-14")
 
-for file in ${replace_files[@]}; do
-    mv ${file} $(dirname "${file}")/_$(basename "${file}")
-    cp $(dirname ${0})/wasm-wrapper.sh ${file}
-    chmod 755 ${file}
-done
+    for file in ${replace_files[@]}; do
+        mv ${file} $(dirname "${file}")/_$(basename "${file}")
+        cp $(dirname ${0})/wasm-wrapper.sh ${file}
+        chmod 755 ${file}
+    done
 
-make \
-    BULK_MEMORY_SOURCES= \
-    PREFIX=/wasi \
-    build/wasi-libc.BUILT \
-    build/libcxx.BUILT \
-    -j"$(nproc)"
+    make \
+        BULK_MEMORY_SOURCES= \
+        PREFIX=/wasi \
+        build/wasi-libc.BUILT \
+        build/libcxx.BUILT \
+        -j"$(nproc)"
+fi
 popd
 
 pushd "$mozilla_release"
